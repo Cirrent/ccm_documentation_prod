@@ -1,12 +1,12 @@
 CCM API Guide
 ===============
 
-The AIROC™ CCM module supports a full range of AT commands, that includes all relevant AWS IoT ExpressLink AT commands. CCM modules also follow the AWS IoT ExpressLink AT command format. In this section we outline how you should use AT commands, and list the commands you can use.
+The AIROC™ CCM module supports a full range of AT commands, including all relevant AWS IoT ExpressLink AT commands. CCM modules also follow the AWS IoT ExpressLink AT command format. In this section we outline how you should use AT commands, and list the commands you can use.
 
-AT Command Usage
+AT command usage
 ******************
 
-AIROC™ CCM modules support execution of AT commands through USB serial device COM port or over the air. Every CCM module command must be sent in this format:
+AIROC™ CCM modules support the execution of AT commands through a USB serial device COM port or over the air. Every command must be sent in this format:
 
 ::
 
@@ -34,11 +34,11 @@ The above format contains the following elements:
                   return ‘PARSE ERROR’.
 ===============   ===============================================================================================================
 
-.. note:: The parameter includes every byte between the separator and eol, but does not include either separator or eol. ASCII values from 0 to 0x1F are valid for the parameter string.
+.. note:: The parameter includes every byte between the separator and EOL, but does not include either separator or EOL. ASCII values from 0 to 0x1F are valid for the parameter string.
 
-.. note:: The complete formatted command string is capped to 5KB in length.
+.. note:: The complete, formatted command string is capped to 5KB in length.
 
-.. note:: The maximum runtime for every command must be listed in the datasheet. No command can take more than 120 seconds to complete (the maximum time for a TCP connection timeout).
+.. note:: No command can take more than 120 seconds to complete (the maximum time for a TCP connection timeout).
 
 Command error codes
 ********************
@@ -81,7 +81,7 @@ Where ERR is the error code, responding to the list of errors below:
 AT operational commands
 **************************
 
-Here is a complete list of AT commands supported by AIROC™ CCM modules.
+Here is a complete list of AT commands supported by AIROC™ CCM modules:
 
 ================================================   ================================================
 Function                                           Command
@@ -98,11 +98,11 @@ Request current location                           AT+WHERE?
 Diagnostic commands                                AT+DIAG
 Configuration commands                             AT+CONF
 Read configuration                                 AT+CONF?
-Enter WiFi credentials, SoftAP mode                AT+CONFMODE
-Publish msg on the specified topic                 AT+SEND
+Enter Wi-Fi credentials, SoftAP mode               AT+CONFMODE
+Publish message on the specified topic             AT+SEND
 Request next message pending on a topic            AT+GET
 Subscribe to a specific topic                      AT+SUBSCRIBE
-Unsubscribe from Topic                             AT+UNSUBSCRIBE
+Unsubscribe from topic                             AT+UNSUBSCRIBE
 Request the next event in the queue                AT+EVENT
 OTA update                                         AT+OTA
 ================================================   ================================================
@@ -128,7 +128,7 @@ So, if the module is connected and if the command parser is active, the module w
 Connect to the AWS IoT Core
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Request a connection to the cloud, which also brings the active device into a higher power consumption mode to communicate with the cloud endpoint.
+Requests a connection to the cloud, which also brings the active device into a higher power consumption mode to communicate with the cloud endpoint.
 
 Command: 
 
@@ -146,13 +146,13 @@ If the connection the cloud endpoint was successful, or
 
 ::
 
-	ERR14 UNABLE TO CONNECT [detail]
+	ERR14 UNABLE TO CONNECT [detail]   # if the connection failed
 
 Where the module could not connect, including additional details such as “Invalid Endpoint”. 
 
-.. note:: if the module is already connected sending a CONNECT won’t return an error – it would simply return “OK CONNECTED”. 
+.. note:: If the module is already connected sending a CONNECT won’t return an error – it would simply return “OK CONNECTED”. 
 
-.. note:: if connection fails a timestamp of the event will be retained to ensure that subsequent connection attempts do not exceed backoff timing limits. Any request to reconnect falling foul of the timing limits will simply be delayed by the module, and attempted automatically according to the backoff algorithm.
+.. note:: If connection fails a timestamp of the event will be retained to ensure that subsequent connection attempts do not exceed backoff timing limits. Any request to reconnect falling foul of the timing limits will simply be delayed by the module, and attempted automatically according to the backoff algorithm.
 
 Example code:
 
@@ -245,7 +245,7 @@ Code sample:
 Reset the CCM internal state
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Use this command to disconnect the device - if it is connected - and to reset its internal state. Any configuration parameters that are non-persistent are reinitialized and all subscriptions are terminated. This command also emptied the message queue.
+Use this command to disconnect the device - if it is connected - and to reset its internal state. Any configuration parameters that are non-persistent are reinitialized and all subscriptions are terminated. This command also empties the message queue.
 
 Command:
 
@@ -308,7 +308,7 @@ If a recent time fix could not be obtained.
 Request CCM location 
 ^^^^^^^^^^^^^^^^^^^^^
 
-This command requests the last location information as available alongside a timestamp that specifies when that location reading was taken. An error is returned if a location fix cannot be determined.
+This command requests the last location information alongside a timestamp that specifies when that location reading was taken. An error is returned if a location fix cannot be determined.
 
 Command:
 
@@ -322,7 +322,7 @@ Returns:
 
 	OK {date} {time} {lat} {long} {elev} {accuracy} {source}
 
-If location coordinates could be obtained at date/time.
+If location coordinates could be obtained.
 
 ::
 
@@ -337,15 +337,10 @@ CCM diagnostic commands
 The Cloud Connectivity Manager (CCM) offers a set of AT commands that can help you understand the networking environment of the device. For CCM devices, the AT DIAG offers users four different functions – LOG, PING, ECHO and SCAN.
 
 
-AT+DIAG LOG
-"""""""""""""
-
-You can enable and disable logging for a device by using the DIAG LOG command. This command is executed as follows:
-
 AT+DIAG LOG X
 """""""""""""
 
-Where parameter X has a value of 0, 1, 2… 9. For each value of X, the level of logging is as follows: 
+You can enable and disable logging for a device by using the DIAG LOG command. Where parameter X has a value of 0, 1, 2… 9. For each value of X, the level of logging is as follows: 
 
 0. "LOG_OFF"
 1. "LOG_ERR"
@@ -376,7 +371,7 @@ AT+DIAG PING
 
 With this command you initiate a ping to a specified IPv4 address from the CCM module.
 
-Command
+Command:
 
 ::
 
@@ -390,7 +385,7 @@ For example:
 
 	AT+DIAG PING 8.8.8.8
 
-Response
+Response:
 
 ::
 
@@ -420,17 +415,17 @@ AT+DIAG SCAN
 
 Initiates a scan of nearby Wi-Fi access points, with a timeout parameter of X seconds. Returns a list of Wi-Fi access points.
 
-Command
+Command:
 
 ::
 
 	AT+DIAG SCAN X
 
-Parameter
+Parameter:
 
 X - Specifies number of seconds
 
-Response
+Response:
 
 :: 
 
@@ -463,7 +458,7 @@ The configuration dictionary is a key-value store containing all the options nec
 
 	ERR9 INVALID KEY LENGTH
 
-Valid key characters are 0-9, A-Z, a-z, a key may only contain alphanumeric characters in any order. If you use non-alphanumeric characters in a key name the CCM module will return:
+Valid key characters are 0-9, A-Z, a-z, a key may only contain alphanumeric characters. If you use non-alphanumeric characters in a key name the CCM module will return:
 
 ::
 
@@ -482,9 +477,9 @@ All keys for the CCM module are predefined, if you use an invalid key is used th
 Persistent keys
 ^^^^^^^^^^^^^^^^^
 
-You can use key-value pairs to set default values for command parameters. You can also use key-value pairs to set credentials, for selecting connectivity options and for timing preferences. The following persistent configuration key-value pairs should be long-lived and constant for the life of your application, and stored in non-volatile memory. A basic set of pairs is defined for all CCM devices. That includes the AP endpoint and the certificate. 
+You can use key-value pairs to set default values for command parameters. You can also use key-value pairs to set credentials, for selecting connectivity options and for setting timing preferences. The following persistent configuration key-value pairs should be long-lived and constant for the life of your application, and stored in non-volatile memory. A basic set of pairs is defined for all CCM devices. That includes the AP endpoint and the certificate. 
 
-.. note:: Some of the below key-value pairs have factory presets, may be read only, or both.
+.. note:: Some of the below key-value pairs may have factory presets, may be read only, or both.
 
 
 +---------------------------------------------------------------------------------------------+----------------------------------------------------+
@@ -492,19 +487,19 @@ You can use key-value pairs to set default values for command parameters. You ca
 +==========================+=======+==========+==============================+================+====================================================+
 | Configuration Parameter  | Type  | Persist  | Initial Value                | Factory Reset  | Description                                        |
 +--------------------------+-------+----------+------------------------------+----------------+----------------------------------------------------+
-| About                    | R     | Y        | Vendor - Model               | N              | A string that identifies the device make and model |
+| About                    | R     | Y        | Vendor - model               | N              | A string that identifies the device make, model.   |
 +--------------------------+-------+----------+------------------------------+----------------+----------------------------------------------------+
 | Version                  | R     | Y        | Module firmware version      | N              | The specific CCM firmware version.                 |
 +--------------------------+-------+----------+------------------------------+----------------+----------------------------------------------------+
-| TechSpec                 | R     | Y        | Technical Specification      | N              | Your CCM module’s technical specification version  |
-|                          |       |          |                              |                | number - e.g v1.1                                  |
+| TechSpec                 | R     | Y        | Technical specification      | N              | Your CCM module’s technical specification version  |
+|                          |       |          |                              |                | number - e.g v1.1.                                  |
 +--------------------------+-------+----------+------------------------------+----------------+----------------------------------------------------+
 | ThingName                | R     | Y        | UID                          | N              | A unique identifier specific to the device, the    |
 |                          |       |          |                              |                | unique ID (UID) is hard-coded to every device,     |
 |                          |       |          |                              |                | delivered natively by the module’s hardware root   |
 |                          |       |          |                              |                | of trust.                                          |
 +--------------------------+-------+----------+------------------------------+----------------+----------------------------------------------------+
-| Certificate              | R     | Y        | Device Birth Certificate     | N              | Device certificate used to authenticate your CCM   |
+| Certificate              | R     | Y        | Device birth certificate     | N              | Device certificate used to authenticate your CCM   |
 |                          |       |          |                              |                | module with Cloud ID, signed by the INFINEON CA.   |
 +--------------------------+-------+----------+------------------------------+----------------+----------------------------------------------------+
 | EndPoint                 | R/W   | Y        | Product Cloud endpoint       | Y              | The endpoint of the Product Cloud account to       |
@@ -513,9 +508,9 @@ You can use key-value pairs to set default values for command parameters. You ca
 | TopicRoot                | R/W   | Y        | UID                          | Y              | A default prefix that is used for user-defined     |
 |                          |       |          |                              |                | topics.                                            |
 +--------------------------+-------+----------+------------------------------+----------------+----------------------------------------------------+
-| HOTAcertificate          | R/W   | Y        | {empty}                      | Y              | Host OTA certificate                               |
+| HOTAcertificate          | R/W   | Y        | {empty}                      | Y              | Host OTA certificate.                              |
 +--------------------------+-------+----------+------------------------------+----------------+----------------------------------------------------+
-| OTAcertificate           | R/W   | Y        | Vendor OTA Certificate       | N              | Module OTA certificate.                            |
+| OTAcertificate           | R/W   | Y        | Vendor OTA certificate       | N              | Module OTA certificate.                            |
 +--------------------------+-------+----------+------------------------------+----------------+----------------------------------------------------+
 | SSID                     | R/W   | Y        | {Empty}                      | Y              | SSID for the Wi-Fi router the device is            |
 |                          |       |          |                              |                | connected to.                                      |
@@ -535,35 +530,35 @@ Configuration dictionary for non-persistent keys
 +--------------------------+-------+----------+------------------------------+---------------------------------------------+
 | Configuration Parameter  | Type  | Persist  | Initial Value                | Description                                 |
 +==========================+=======+==========+==============================+=============================================+
-| IPv4Address              | R     | N        | 0.0.0.0                      | The IPv4 address of the device              |
+| IPv4Address              | R     | N        | 0.0.0.0                      | The IPv4 address of the device.             |
 +--------------------------+-------+----------+------------------------------+---------------------------------------------+
-| IPv6Address              | R     | N        | ::                           | Current device IPv6 address                 |
+| IPv6Address              | R     | N        | ::                           | Current device IPv6 address.                |
 +--------------------------+-------+----------+------------------------------+---------------------------------------------+
-| DNSAddress               | R     | N        | 0.0.0.0                      | Current DNS address (IPv4 or IPv6)          |
+| DNSAddress               | R     | N        | 0.0.0.0                      | Current DNS address (IPv4 or IPv6).         |
 +--------------------------+-------+----------+------------------------------+---------------------------------------------+
-| GatewayAddress           | R     | N        | 0.0.0.0                      | Current router IP address (IPv4 or IPv6)    |
+| GatewayAddress           | R     | N        | 0.0.0.0                      | Current router IP address (IPv4 or IPv6).   |
 +--------------------------+-------+----------+------------------------------+---------------------------------------------+
-| Topic1                   | R/W   | N        | {Empty}                      | Custom defined topic 1                      |
+| Topic1                   | R/W   | N        | {Empty}                      | Custom defined topic 1.                     |
 +--------------------------+-------+----------+------------------------------+---------------------------------------------+
-| Topic2                   | R/W   | N        | {Empty}                      | Custom defined topic 2                      |
+| Topic2                   | R/W   | N        | {Empty}                      | Custom defined topic 2.                     |
 +--------------------------+-------+----------+------------------------------+---------------------------------------------+
 | ...                      |       |          |                              |                                             |
 +--------------------------+-------+----------+------------------------------+---------------------------------------------+
-| Topic<Max Topic>         | R/W   | N        | {Empty}                      | Custom defined topic MaxTopic               |
+| Topic<Max Topic>         | R/W   | N        | {Empty}                      | Custom defined topic MaxTopic.              |
 +--------------------------+-------+----------+------------------------------+---------------------------------------------+
 
 
 
-Assign a value to selected configuration parameter
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Assign a value to the selected configuration parameter
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Command
+Command:
 
 ::
 
 	AT+CONF key=value
 
-Returns
+Returns:
 
 ::
 
@@ -631,9 +626,7 @@ ERR13 KEY WRITEONLY                  The key is write-only and can’t be read
 Entering Wi-Fi credentials
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-AIROC™ CCM module supports Wi-Fi SoftAP onboarding. To enable this feature you are expected to use CONFMODE to receive additional connection credentials from user input.
-
-Use this command to enter SoftAP mode, where the host temporarily assumes the role of an Access Point. After enabling Wi-Fi SoftAP onboarding, user needs to use CIRRENT™ Wi-Fi Onboarding mobile app to onboard the AIROC™ CCM module. See the Wi-Fi onboarding section.
+AIROC™ CCM modules supports Wi-Fi SoftAP onboarding. To enable this feature you need to use CONFMODE to receive additional connection credentials from user input. Use this command to enter SoftAP mode, where the host temporarily assumes the role of an access point. After enabling Wi-Fi SoftAP onboarding, the user needs to use CIRRENT™ Wi-Fi Onboarding mobile app to onboard the AIROC™ CCM module.
 
 Command:
 
@@ -656,9 +649,324 @@ The device entered CONFMODE and is ready to proceed with SoftAP onboarding.
 
 The device cannot enter CONFMODE due to a current connection, first use DISCONNECT.
 
-A CONFMODE notification event is generated once the SoftAP process is complete. Only after that can the host issue a CONNECT command to establish a connection using the newly entered credentials. See the Event handling section.
+A CONFMODE notification event is generated once the SoftAP process is complete. Only after that can the host issue a CONNECT command to establish a connection using the newly entered credentials.
 
 
-.. note:: While in CONFMODE, the CCM module can continue to respond to commands, with the exception of commands that require an active connection such as ‘AT+CONF? Version’. Where the device in CONFMODE a command that requires an active connection will return an error   'ERR6 NO CONNECTION'. Likewise, if you try to use a CONNECT command while in CONFMODE you will get a response stating:  'ERR14 UNABLE TO CONNECT'.
+.. note:: While in CONFMODE, the CCM module can continue to respond to commands, with the exception of commands that require an active connection such as ‘AT+CONF? Version’. Where the device in CONFMODE a command that requires an active connection will return an error: 'ERR6 NO CONNECTION'. Likewise, if you try to use a CONNECT command while in CONFMODE you will get a response stating: 'ERR14 UNABLE TO CONNECT'.
 
 .. note:: use the RESET command at any time to shut down CONFMODE.
+
+
+AT messaging commands
+**********************
+
+CCM modules have a messaging system that uses a list of topics that are defined by a configuration dictionary. See configuration dictionary in the previous section. Each of these topics is assigned a specific index that can be used to access the string value. Index 0 is reserved, other index values can be used by the device to define additional topics.
+
+Topic usage rules
+^^^^^^^^^^^^^^^^^^
+
+The following rules apply to CCM modules when using topics:
+
+Default TopicRoot
+"""""""""""""""""""
+
+Use the topic root to prefix topics used during SEND/GET and SUBSCRIBE commands, it is intended to simplify the work your device needs to do to put together a path containing its UID (ThingName).
+
+Prefix topic strings with '/' to indicate they are complete
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+Any topic string which is prefixed with a ‘/’ are seen as complete, the topic root won’t be added to that topic name. Note the leading ‘/’ will be stripped.
+
+Data topics for publishing: <TopicRoot>/<Topic@Index>
+""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+To create a topic name for publishing you combine the TopicRoot as set in the CONF dictionary with the values at the indexed position in the topic table.
+
+Data topics for receiving <TopicRoot>/<Topic@Index>
+""""""""""""""""""""""""""""""""""""""""""""""""""""
+To create a topic name for subscription you combine the TopicRoot as set in the CONF dictionary with the value at the indexed position in the topic.
+
+.. note:: Topic Index 0 is reserved. It acts as a catch-all when your device sends a message that does not match another, existing topic. Therefore, the list of topics cannot contain an entry for Topic0.
+
+.. note:: Topic Index{MaxTopic} is a value that depends on your implementation, it must be ≥ 16.
+
+
+Publish a message on the specified topic
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Command:
+
+::
+
+	AT+SEND {topic} message
+
+Where **{topic}** is a string formatted according to topic rules and **message** is the message to publish (string).
+
+Sample:
+
+::
+
+	AT+SEND data Hello World    # Publish the classic 'Hello World' message on topic 'data'
+	OK                          # Message sent
+
+
+Publish msg on a topic selected from topic list
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Command:
+
+::
+
+	AT+SEND{#} message 
+
+Where **{#}** is the index number of a topic in CONFIG dictionary (1..MaxTopic), and **message** the message to publish (string).
+
+Sample
+
+::
+
+	AT+SEND2 Hello World    # Publish 'Hello World' on Topic2
+	OK                      # Message Sent
+
+or
+
+::
+
+	ERR6 NO CONNECTION  #  No connection has been made
+
+or
+
+::
+
+	ERR7 TOPIC OUT OF RANGE  # If the supplied topic index is larger than the maximum allowed topic number
+
+Or 
+
+::
+
+	ERR8 TOPIC UNDEFINED #  If the supplied topic index points to a topic entry that has not been defined
+
+
+Retrieve the next message received
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Command:
+
+::
+
+	AT+GET
+
+Returns:
+
+::
+
+	OK{separator}<topic>{separator}<MESSAGE>{eol}    
+
+If there are any messages available on a topic the CCM module responds with OK, followed by the topic name and the message.
+
+Sample:
+
+::
+
+	AT+GET                 # Poll for messages received on any topic
+	OK data Hello World    # A message was received from topic 'data'
+	OK{eol} #  If no message was received on any topic
+
+
+
+Request next message pending on an unassigned topic
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Command:
+
+::
+
+	AT+GET0
+
+Returns:
+
+::
+
+	OK{separator}<Topic>{separator}<MESSAGE>{eol}
+
+Sample:
+
+::
+
+	AT+GET0                # This command polls for messages received on any unassigned topic
+	OK data Hello World    # A message was received from topic 'data'
+
+or
+
+::
+
+	OK{eol} # if no message was received on any unassigned topic, the module returns 'OK' followed by {eol}.
+
+Request next message pending on the indicated topic
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Command:
+
+::
+
+	AT+GET{#}
+
+Retrieve the next message received on a topic at the specified index # (1..MaxTopic) in the topic list.
+
+Returns:
+
+::
+
+	OK{separator}{MESSAGE}{eol}
+
+If a message is available on the indicated topic, the module responds with 'OK' followed immediately by the message.
+
+Sample:
+
+::
+
+	AT+GET2           # Select messages received on Topic2
+	OK Hello World    # A message received on the topic at index 2 in the list of topics
+
+or
+
+::
+
+	OK{eol}  # If a message is NOT available matching the requested topic
+
+or
+
+::
+
+	ERR7 TOPIC OUT OF RANGE # If the supplied topic index is larger than the maximum allowed topic number
+
+or
+
+::
+
+	ERR8 TOPIC UNDEFINED # If the requested topic is not defined
+
+
+Message queue overflow conditions
+""""""""""""""""""""""""""""""""""
+
+If your device never retrieves a message, and never frees up space, the buffer capacity can be exceeded which leads to an overrun. When that happens the oldest message in the buffer is lost, and the condition is reported as an OVERFLOW event in the event queue. 
+
+Subscribe to the indicated topic
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Command:
+
+::
+
+	SUBSCRIBE{#}
+
+Subscribes to the topic number and starts receiving messages, any incoming messages will trigger an event. Messages can be read with a GET{#} command. 
+
+.. note:: It is a stateless feature as your device will request a subscription to the MQTT broker, but it will not retain information about its current state.
+
+.. note:: Sending a message to a topic to which the device is subscribed results in the broker sending a copy back to the module.
+
+Example 1:
+
+::
+
+	AT+CONF TopicRoot=building1/floor1
+	AT+CONF Topic1=sensor1/state
+	AT+SUBSCRIBE1    # The module will subscribe to the topic building1/floor1/sensor1/state
+
+
+Example 2:
+
+::
+
+	AT+CONF Topic2=/sensor1/state
+	AT+SUBSCRIBE2    # The module will subscribe to the topic sensor1/state
+	Returns:
+	ERR6 NO CONNECTION # If no connection has been made
+	ERR8 TOPIC UNDEFINED # If the requested topic is not defined
+	ERR7 TOPIC OUT OF RANGE # If the supplied topic index is larger than the maximum allowed topic number
+
+
+Unsubscribe from Topic#
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Command:
+
+::
+
+	UNSUBSCRIBE{#}
+
+Sample:
+
+::
+
+	AT+CONF TopicRoot=building1/floor1
+	AT+CONF Topic1=sensor1/state
+	AT+SUBSCRIBE1      # The module will subscribe to topic building1/floor1/sensor1/state
+	AT+UNSUBSCRIBE1    # The module will unsubscribe topic building1/floor1/sensor1/state
+
+Returns:
+
+::
+
+	ERR6 NO CONNECTION # If no connection has been made
+	ERR8 TOPIC UNDEFINED # If the requested topic is not defined
+	ERR7 TOPIC INDEX OUT OF RANGE # If the supplied topic index is larger than the maximum allowed topic number
+
+
+Request the next event in the queue
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+An event is essentially an asynchronous message on a topic that a CCM module has subscribed to and on which it is receiving and queuing messages. That includes error messages that reflect an unexpected change in the internal state of a device.
+
+You can poll events periodically, using the EVENT? command. Where there is more than one event in the queue, that value returned by the EVENT? command will reflect the last event that occurred. 
+
+.. note:: Sleep, reset, and factory reset commands automatically clear all pending events.
+
+Command:
+
+::
+
+	AT+EVENT?
+
+Returns:
+
+::
+
+	OK [{event_identifier} {parameter} {mnemonic [detail] }]{{eol}
+
+or
+
+::
+
+	OK{eol}  # If the event queue is empty, then the 'OK' response is followed immediately by {eol}.
+
+The table below outlines common event identifiers and error codes as used by CCM modules. 
+
+
++---------------------------------------------------------------------------------------------------------------------------+
+| CCM event codes                                                                                                           |
++====================+================+==========================+==========================================================+
+| Event Identifier   | Parameter      | Mnemonic                 | Description                                              |
++--------------------+----------------+--------------------------+----------------------------------------------------------+
+| 1                  | Topic Index    | MSG                      | Indicates that a message was received on topic #.        |
++--------------------+----------------+--------------------------+----------------------------------------------------------+
+| 2                  | 0              | STARTUP                  | The module has entered the active state.                 |
++--------------------+----------------+--------------------------+----------------------------------------------------------+
+| 3                  | 0              | CONLOST                  | Connection lost.                                         |
++--------------------+----------------+--------------------------+----------------------------------------------------------+
+| 4                  | 0              | OVERRUN                  | Receive buffer overrun (topic in detail).                |
++--------------------+----------------+--------------------------+----------------------------------------------------------+
+| 5                  | 0              | OTA                      | OTA event (see OTA? for detail).                         |
++--------------------+----------------+--------------------------+----------------------------------------------------------+
+| 6                  | 0              | SHADOW                   | SHADOW event.                                            |
++--------------------+----------------+--------------------------+----------------------------------------------------------+
+| 7                  | 0              | CONFMODE                 | CONFMODE exit with success.                              |
++--------------------+----------------+--------------------------+----------------------------------------------------------+
+| ≤ 999              | -              |                          | RESERVED.                                                |
++--------------------+----------------+--------------------------+----------------------------------------------------------+
+| ≥1000              | -              |                          | Available for custom implementation.                     |
++--------------------+----------------+--------------------------+----------------------------------------------------------+
+
+
