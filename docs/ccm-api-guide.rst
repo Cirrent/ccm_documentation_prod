@@ -8,7 +8,7 @@ AT command usage
 
 AIROC™ CCM modules support the execution of AT commands through a USB serial device COM port or over the air. Every command must be sent in this format:
 
-::
+.. code-block:: none
 
 	AT+{command}[#][?]{separator}[parameter]{eol}
 
@@ -45,7 +45,7 @@ Command error codes
 
 The standard format for error codes is:
 
-::
+.. code-block:: none
 
  	OK|ERR{#}{separator}[detail]{eol}
 
@@ -90,11 +90,8 @@ CCM-to-host communication test                     AT
 Connect to the Product Cloud                       AT+CONNECT
 Disconnect from the Product Cloud                  AT+DISCONNECT
 Check Product Cloud connection status              AT+CONNECT?
-Request to enter a low power mode                  AT+SLEEP
 Reset internal state of the module                 AT+RESET
 Perform a factory reset of the CCM module          AT+FACTORY_RESET
-Request current time                               AT+TIME?
-Request current location                           AT+WHERE?
 Diagnostic commands                                AT+DIAG
 Configuration commands                             AT+CONF
 Read configuration                                 AT+CONF?
@@ -113,13 +110,13 @@ Communication Test
 When you simply send the 'AT' (attention) command the host verifies that the module command parser is ready and present.
 Example:
 
-::
+.. code-block:: none
 
 	AT    # requests the module’s attention
 
 Returns:
 
-::
+.. code-block:: none
 
 	OK
 
@@ -132,19 +129,19 @@ Requests a connection to the cloud, which also brings the active device into a h
 
 Command: 
 
-::
+.. code-block:: none
 
-	AT CONNECT
+	AT+CONNECT
 
 Returns:
 
-::
+.. code-block:: none
 
 	OK 1 CONNECTED
 
 If the connection the cloud endpoint was successful, or 
 
-::
+.. code-block:: none
 
 	ERR14 UNABLE TO CONNECT [detail]   # if the connection failed
 
@@ -156,7 +153,7 @@ Where the module could not connect, including additional details such as “Inva
 
 Example code:
 
-::
+.. code-block:: none
 
 	AT+CONNECT        # request to connect
 	OK 1 CONNECTED    # connection established successfully
@@ -171,75 +168,44 @@ Requests the status of the CCM module’s connection to your Product Cloud.
 
 Command:
 
-::
+.. code-block:: none
 
-	AT CONNECT?
+	AT+CONNECT?
 
 Returns: 
 
 If the connection is active the module returns
 
-::
+.. code-block:: none
 
 	OK 1  
 
 If the connection is inactive the module returns
 
-::
+.. code-block:: none
 
 	OK 0
 
 Disconnect from the Product Cloud
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-You can use this command to allow your host to prepare to transition to low power (you would use this command before the SLEEP command). You can also use this command to update connection parameters before a new connection is made using updated parameters. 
+You can use this command to update connection parameters before a new connection is made using updated parameters. 
 
 Command: 
 
-::
+.. code-block:: none
 
-	AT DISCONNECT
+	AT+DISCONNECT
 
 Returns:
 
-::
+.. code-block:: none
 
 	OK 0 DISCONNECTED
 
 .. note:: If a module is already disconnected the command will simply return ('OK').
 
-Enter a low power mode
-^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Sending this command enters your module into low power mode. If you do not specify a duration the module will remain in low power mode until an external reset event is triggered, or a new AT+CONNECT command is received.
-
-Command:
-
-::
-
-	AT+SLEEP 
-
-Returns:
-
-::
-
-	OK
-
-If the device is ready, indicates the device is going to immediately enter into low power mode.
-
-::
-
-	ERR18 ACTIVE CONNECTION
-
-This error is returned when an active connection to your Product Cloud exists. The device will not enter into low power mode. Use the DISCONNECT command first to terminate the active connection.
-
-Code sample:
-
-::
-
-	AT+SLEEP 100 		 # Disconnect and suspend all activities for 100 seconds
-	OK 		               # Drop connections and goes to sleep 
-	AT+CONNECT    		# Resume connection and all pending activities 
 
 
 Reset the CCM internal state
@@ -249,13 +215,13 @@ Use this command to disconnect the device - if it is connected - and to reset it
 
 Command:
 
-::
+.. code-block:: none
 
 	AT+RESET
 
 Returns:
 
-::
+.. code-block:: none
 
 	OK
 
@@ -268,67 +234,19 @@ This command executes a full factory reset of the CCM module, re-initializing al
 
 Command:
 
-::
+.. code-block:: none
 
 	AT+FACTORY_RESET
 
 Returns:
 
-::
+.. code-block:: none
 
 	OK
 
 Indicating that the command is successful.
 
-Get the time
-^^^^^^^^^^^^^^
 
-This command requests the current time information on the device, or returns an error if for some reason the time information could not be determined.
-
-Command:
-
-::
-
-	AT+TIME?
-
-Returns:
-
-::
-
-	OK {date YYYY/MM/DD} {time hh:mm:ss.xx} {source}
-
-If time information is available and if it was recently obtained.
-
-::
-
-	ERR15 TIME NOT AVAILABLE
-
-If a recent time fix could not be obtained.
-
-Request CCM location 
-^^^^^^^^^^^^^^^^^^^^^
-
-This command requests the last location information alongside a timestamp that specifies when that location reading was taken. An error is returned if a location fix cannot be determined.
-
-Command:
-
-::
-
-	AT+LOCATION?
-
-Returns:
-
-::
-
-	OK {date} {time} {lat} {long} {elev} {accuracy} {source}
-
-If location coordinates could be obtained.
-
-::
-
-	ERR16 LOCATION NOT AVAILABLE
-
-If a location fix could not be obtained.
 
 
 CCM diagnostic commands
@@ -355,13 +273,13 @@ You can enable and disable logging for a device by using the DIAG LOG command. W
 
 Command
 
-::
+.. code-block:: none
 
 	AT+DIAG LOG 4
 
 Response
 
-::
+.. code-block:: none
 
 	OK
 
@@ -373,7 +291,7 @@ With this command you initiate a ping to a specified IPv4 address from the CCM m
 
 Command:
 
-::
+.. code-block:: none
 
 	AT+DIAG PING x.x.x.x
 
@@ -381,13 +299,13 @@ Where the parameter x.x.x.x is the IPv4 address
 
 For example:
 
-::
+.. code-block:: none
 
 	AT+DIAG PING 8.8.8.8
 
 Response:
 
-::
+.. code-block:: none
 
 	OK Received ping response in 34ms
 
@@ -399,13 +317,13 @@ By default, the echo command is disabled in the CCM module. You can enable the e
 
 Command
 
-::
+.. code-block:: none
 
 	AT+DIAG ECHO
 
 Response
 
-::
+.. code-block:: none
 
 	OK
 
@@ -417,7 +335,7 @@ Initiates a scan of nearby Wi-Fi access points, with a timeout parameter of X se
 
 Command:
 
-::
+.. code-block:: none
 
 	AT+DIAG SCAN X
 
@@ -427,19 +345,19 @@ X - Specifies number of seconds
 
 Response:
 
-:: 
+.. code-block:: none
 
 	OK SSID :XXXXX DB :YY Channel :ZZ
 
 Code sample:
 
-::
+.. code-block:: none
 
 	AT+DIAG SCAN 5
 
 Response:
 
-::
+.. code-block:: none
 
 	OK SSID :IFX_AP_01 DB :-74 Channel :11\n OK SSID :IFX_AP_02 DB :-71 Channel :11\n
 
@@ -454,19 +372,19 @@ Configuration Dictionary
 
 The configuration dictionary is a key-value store containing all the options necessary for the proper functioning of ExpressLink modules. Maximum key length is 16 characters. A key can be from 1 to 16 characters. You will receive the following error if you send a command with a key that is longer than 16 characters:
 
-::
+.. code-block:: none
 
 	ERR9 INVALID KEY LENGTH
 
 Valid key characters are 0-9, A-Z, a-z, a key may only contain alphanumeric characters. If you use non-alphanumeric characters in a key name the CCM module will return:
 
-::
+.. code-block:: none
 
 	ERR10 INVALID KEY NAME
 
 All keys for the CCM module are predefined, if you use an invalid key is used the module returns this error:
 
-::
+.. code-block:: none
 
 	ERR11 UNKNOWN KEY
 
@@ -554,19 +472,19 @@ Assign a value to the selected configuration parameter
 
 Command:
 
-::
+.. code-block:: none
 
 	AT+CONF key=value
 
 Returns:
 
-::
+.. code-block:: none
 
 	OK
 
 If the command was successful, the module returns 'OK'.
 
-::
+.. code-block:: none
 
 	ERR# {message}
 
@@ -574,7 +492,7 @@ If the command was not successful, the module returns an error.
 
 Example:
 
-::
+.. code-block:: none
 
 	AT+CONF SSID=MY_SSID    # Assign the preferred (local) Wi-Fi router SSID
 
@@ -595,19 +513,19 @@ Read value of selected configuration parameter
 
 Command:
 
-::
+.. code-block:: none
 
 	AT+CONF? key
 
 Returns:
 
-::
+.. code-block:: none
 
 	OK {value}
 
 If the command was successful, the module returns 'OK' followed by the value.
 
-::
+.. code-block:: none
 
 	ERR# {message}
 
@@ -630,20 +548,20 @@ AIROC™ CCM modules supports Wi-Fi SoftAP onboarding. To enable this feature yo
 
 Command:
 
-::
+.. code-block:: none
 
 	CONFMODE [parameter]
 
 Returns:
 
-::
+.. code-block:: none
 
 	OK CONFMODE ENABLED
 
 The device entered CONFMODE and is ready to proceed with SoftAP onboarding.
 
 
-::
+.. code-block:: none
 
 	ERR18 CURRENT CONNECTION
 
@@ -696,7 +614,7 @@ Publish a message on the specified topic
 
 Command:
 
-::
+.. code-block:: none
 
 	AT+SEND {topic} message
 
@@ -704,7 +622,7 @@ Where **{topic}** is a string formatted according to topic rules and **message**
 
 Sample:
 
-::
+.. code-block:: none
 
 	AT+SEND data Hello World    # Publish the classic 'Hello World' message on topic 'data'
 	OK                          # Message sent
@@ -715,7 +633,7 @@ Publish msg on a topic selected from topic list
 
 Command:
 
-::
+.. code-block:: none
 
 	AT+SEND{#} message 
 
@@ -723,26 +641,26 @@ Where **{#}** is the index number of a topic in CONFIG dictionary (1..MaxTopic),
 
 Sample
 
-::
+.. code-block:: none
 
 	AT+SEND2 Hello World    # Publish 'Hello World' on Topic2
 	OK                      # Message Sent
 
 or
 
-::
+.. code-block:: none
 
 	ERR6 NO CONNECTION  #  No connection has been made
 
 or
 
-::
+.. code-block:: none
 
 	ERR7 TOPIC OUT OF RANGE  # If the supplied topic index is larger than the maximum allowed topic number
 
 Or 
 
-::
+.. code-block:: none
 
 	ERR8 TOPIC UNDEFINED #  If the supplied topic index points to a topic entry that has not been defined
 
@@ -752,13 +670,13 @@ Retrieve the next message received
 
 Command:
 
-::
+.. code-block:: none
 
 	AT+GET
 
 Returns:
 
-::
+.. code-block:: none
 
 	OK{separator}<topic>{separator}<MESSAGE>{eol}    
 
@@ -766,7 +684,7 @@ If there are any messages available on a topic the CCM module responds with OK, 
 
 Sample:
 
-::
+.. code-block:: none
 
 	AT+GET                 # Poll for messages received on any topic
 	OK data Hello World    # A message was received from topic 'data'
@@ -779,26 +697,26 @@ Request next message pending on an unassigned topic
 
 Command:
 
-::
+.. code-block:: none
 
 	AT+GET0
 
 Returns:
 
-::
+.. code-block:: none
 
 	OK{separator}<Topic>{separator}<MESSAGE>{eol}
 
 Sample:
 
-::
+.. code-block:: none
 
 	AT+GET0                # This command polls for messages received on any unassigned topic
 	OK data Hello World    # A message was received from topic 'data'
 
 or
 
-::
+.. code-block:: none
 
 	OK{eol} # if no message was received on any unassigned topic, the module returns 'OK' followed by {eol}.
 
@@ -807,7 +725,7 @@ Request next message pending on the indicated topic
 
 Command:
 
-::
+.. code-block:: none
 
 	AT+GET{#}
 
@@ -815,7 +733,7 @@ Retrieve the next message received on a topic at the specified index # (1..MaxTo
 
 Returns:
 
-::
+.. code-block:: none
 
 	OK{separator}{MESSAGE}{eol}
 
@@ -823,26 +741,26 @@ If a message is available on the indicated topic, the module responds with 'OK' 
 
 Sample:
 
-::
+.. code-block:: none
 
 	AT+GET2           # Select messages received on Topic2
 	OK Hello World    # A message received on the topic at index 2 in the list of topics
 
 or
 
-::
+.. code-block:: none
 
 	OK{eol}  # If a message is NOT available matching the requested topic
 
 or
 
-::
+.. code-block:: none
 
 	ERR7 TOPIC OUT OF RANGE # If the supplied topic index is larger than the maximum allowed topic number
 
 or
 
-::
+.. code-block:: none
 
 	ERR8 TOPIC UNDEFINED # If the requested topic is not defined
 
@@ -857,7 +775,7 @@ Subscribe to the indicated topic
 
 Command:
 
-::
+.. code-block:: none
 
 	SUBSCRIBE{#}
 
@@ -869,7 +787,7 @@ Subscribes to the topic number and starts receiving messages, any incoming messa
 
 Example 1:
 
-::
+.. code-block:: none
 
 	AT+CONF TopicRoot=building1/floor1
 	AT+CONF Topic1=sensor1/state
@@ -878,7 +796,7 @@ Example 1:
 
 Example 2:
 
-::
+.. code-block:: none
 
 	AT+CONF Topic2=/sensor1/state
 	AT+SUBSCRIBE2    # The module will subscribe to the topic sensor1/state
@@ -893,13 +811,13 @@ Unsubscribe from Topic#
 
 Command:
 
-::
+.. code-block:: none
 
 	UNSUBSCRIBE{#}
 
 Sample:
 
-::
+.. code-block:: none
 
 	AT+CONF TopicRoot=building1/floor1
 	AT+CONF Topic1=sensor1/state
@@ -908,7 +826,7 @@ Sample:
 
 Returns:
 
-::
+.. code-block:: none
 
 	ERR6 NO CONNECTION # If no connection has been made
 	ERR8 TOPIC UNDEFINED # If the requested topic is not defined
@@ -926,19 +844,19 @@ You can poll events periodically, using the EVENT? command. Where there is more 
 
 Command:
 
-::
+.. code-block:: none
 
 	AT+EVENT?
 
 Returns:
 
-::
+.. code-block:: none
 
 	OK [{event_identifier} {parameter} {mnemonic [detail] }]{{eol}
 
 or
 
-::
+.. code-block:: none
 
 	OK{eol}  # If the event queue is empty, then the 'OK' response is followed immediately by {eol}.
 
